@@ -7,6 +7,25 @@ use Net::LDAPS;
 use Net::LDAP::Control::Paged;
 use Net::LDAP::Constant qw( LDAP_CONTROL_PAGED );
 
+use DBI;
+
+my $my_cnf = '/secret/my_cnf.cnf';
+
+my $dbh = DBI->connect("DBI:mysql:"
+	. ";mysql_read_default_file=$my_cnf"
+	.';mysql_read_default_group=ldap',
+	undef,
+	undef
+) or die "something went wrong ($DBI::errstr)";
+
+
+my $clear_data = $dbh->prepare("truncate table ldap");
+$clear_data->execute;
+
+my $query = $dbh->prepare("insert into ldap (dn,title,department,description) values (?,?,?,?)");
+
+
+
 
 my %config = do '/secret/actian.config';
 
@@ -46,11 +65,13 @@ while (1) {
 		my $title = $_->get_value('title');
 		if(!defined($title)){ $title="none";};
 		my $dept = $_->get_value('department');
-		my $desc = $_->get_value('description');
 		if(!defined($dept)){ $dept="none";};
+		my $desc = $_->get_value('description');
+		if(!defined($desc)){ $desc="none";};
 		#my $pwdLastSet = $_->get_value('pwdLastSet');
 		print "$count found user: $dn , title: $title, dept: $dept, desc: $desc\n";
-		exit if $count > 40;
+		$query->execute($dn,$title,$dept,$desc);
+#		exit if $count > 40; #for debugging so we dont have to go through all the entries
 		$count++
 	}
 
