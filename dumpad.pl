@@ -22,7 +22,7 @@ my $dbh = DBI->connect("DBI:mysql:"
 my $clear_data = $dbh->prepare("truncate table ldap");
 $clear_data->execute;
 
-my $query = $dbh->prepare("insert into ldap (dn,title,department,description) values (?,?,?,?)");
+my $query = $dbh->prepare("insert into ldap (dn,title,department,description,mail,sam) values (?,?,?,?,?,?)");
 
 
 
@@ -61,17 +61,16 @@ while (1) {
 	my $count=0;
 
 	foreach ($mesg->entries) {
-		my $dn = $_->get_value('distinguishedName');
-		my $title = $_->get_value('title');
-		if(!defined($title)){ $title="none";};
-		my $dept = $_->get_value('department');
-		if(!defined($dept)){ $dept="none";};
-		my $desc = $_->get_value('description');
-		if(!defined($desc)){ $desc="none";};
-		#my $pwdLastSet = $_->get_value('pwdLastSet');
-		print "$count found user: $dn , title: $title, dept: $dept, desc: $desc\n";
-		$query->execute($dn,$title,$dept,$desc);
-#		exit if $count > 40; #for debugging so we dont have to go through all the entries
+		my $dn = defined($_->get_value('distinguishedName')) ? $_->get_value('distinguishedName') : "none";
+		my $title = defined($_->get_value('title')) ? $_->get_value('title') : "none";
+		my $dept = defined($_->get_value('department')) ? $_->get_value('department') : "none";
+		my $desc = defined($_->get_value('description')) ? $_->get_value('description') : "none";
+		my $mail = defined($_->get_value('mail')) ? $_->get_value('mail') : "none";
+		my $sam = defined($_->get_value('samaccountname')) ? $_->get_value('samaccountname') : "none";
+
+		print "$count found user: $dn , title: $title, dept: $dept, desc: $desc, email: $mail, sam: $sam\n";
+		$query->execute($dn,$title,$dept,$desc,$mail,$sam);
+		#exit if $count > 40; #for debugging so we dont have to go through all the entries
 		$count++
 	}
 
