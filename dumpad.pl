@@ -22,7 +22,7 @@ my $dbh = DBI->connect("DBI:mysql:"
 my $clear_data = $dbh->prepare("truncate table ldap");
 $clear_data->execute;
 
-my $query = $dbh->prepare("insert into ldap (dn,title,department,description,mail,sam) values (?,?,?,?,?,?)");
+my $query = $dbh->prepare("insert into ldap (dn,title,department,description,mail,sam,givenName,sn) values (?,?,?,?,?,?,?,?)");
 
 
 
@@ -67,9 +67,11 @@ while (1) {
 		my $desc = defined($_->get_value('description')) ? $_->get_value('description') : "none";
 		my $mail = defined($_->get_value('mail')) ? $_->get_value('mail') : "none";
 		my $sam = defined($_->get_value('samaccountname')) ? $_->get_value('samaccountname') : "none";
+		my $givenName = defined($_->get_value('givenName')) ? $_->get_value('givenName') : "none";
+		my $sn = defined($_->get_value('sn')) ? $_->get_value('sn') : "none";
 
 		print "$count found user: $dn , title: $title, dept: $dept, desc: $desc, email: $mail, sam: $sam\n";
-		$query->execute($dn,$title,$dept,$desc,$mail,$sam);
+		$query->execute($dn,$title,$dept,$desc,$mail,$sam,$givenName,$sn);
 		#exit if $count > 40; #for debugging so we dont have to go through all the entries
 		$count++
 	}
