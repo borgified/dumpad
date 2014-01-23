@@ -4,7 +4,6 @@
 #
 # lu.pl											- list all DLs
 # lu.pl <string>						- search a distribution list by <string>
-# lu.pl someone@actian.com	- list all the DLs this person belongs to
 # lu.pl DL@actian.com				- list all the emails belonging to this DL
 #
 #
@@ -33,7 +32,6 @@ if(!defined($ARGV[0])){
 #
 # lu.pl                     - list all DLs
 # lu.pl <string>            - search a distribution list by <string>
-# lu.pl someone\@actian.com  - list all the DLs this person belongs to
 # lu.pl DL\@actian.com       - list all the emails belonging to this DL
 
 EOL
