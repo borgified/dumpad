@@ -66,7 +66,9 @@ while (1) {
 		my $mail = defined($_->get_value('mail')) ? $_->get_value('mail') : "none";
 		my $managedby = defined($_->get_value('managedby')) ? $_->get_value('managedby') : "none";
 		my @member = defined($_->get_value('member')) ? $_->get_value('member') : "none";
+		$"=":";
 		my $members = "@member";
+		$"=" ";
 		my $sam = defined($_->get_value('samaccountname')) ? $_->get_value('samaccountname') : "none";
 		my $name = defined($_->get_value('name')) ? $_->get_value('name') : "none";
 
