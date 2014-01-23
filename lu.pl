@@ -52,7 +52,14 @@ sub findemail {
 	$query->execute;
 	while(my @row=$query->fetchrow_array){
 		my $row="@row";
-		my @accounts = split(/:/,
+		my @accounts = split(/:/,$row);
+		foreach my $item (@accounts){
+			my $query = $dbh->prepare("select mail from ldap where dn = \'$item\'");
+			$query->execute;
+			while(my @line=$query->fetchrow_array){
+				print "@line\n";
+			}
+		}
 	}
 }
 
