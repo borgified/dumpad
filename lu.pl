@@ -1,13 +1,5 @@
 #!/usr/bin/env perl
 
-#usage:
-#
-# lu.pl											- list all DLs
-# lu.pl <string>						- search a distribution list by <string>
-# lu.pl DL@actian.com				- list all the emails belonging to this DL
-#
-#
-
 use warnings;
 use strict;
 use DBI;
@@ -32,7 +24,7 @@ if(!defined($ARGV[0])){
 #
 # lu.pl                     - list all DLs
 # lu.pl <string>            - search a distribution list by <string>
-# lu.pl DL\@actian.com       - list all the emails belonging to this DL
+# lu.pl DL\@company.com       - list all the emails belonging to this DL
 
 EOL
 	;
