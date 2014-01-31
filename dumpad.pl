@@ -22,7 +22,7 @@ my $dbh = DBI->connect("DBI:mysql:"
 my $clear_data = $dbh->prepare("truncate table ldap");
 $clear_data->execute;
 
-my $query = $dbh->prepare("insert into ldap (dn,title,department,description,mail,sam,givenName,sn,name,company,c,st,physicalDeliveryOfficeName,telephoneNumber,facsimileTelephoneNumber,manager) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+my $query = $dbh->prepare("insert into ldap (dn,title,department,description,mail,sam,givenName,sn,displayname,company,c,st,physicalDeliveryOfficeName,telephoneNumber,facsimileTelephoneNumber,manager) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 
 
@@ -69,7 +69,7 @@ while (1) {
 		my $sam = defined($_->get_value('samaccountname')) ? $_->get_value('samaccountname') : "none";
 		my $givenName = defined($_->get_value('givenName')) ? $_->get_value('givenName') : "none";
 		my $sn = defined($_->get_value('sn')) ? $_->get_value('sn') : "none";
-		my $name = defined($_->get_value('name')) ? $_->get_value('name') : "none";
+		my $displayname = defined($_->get_value('displayname')) ? $_->get_value('displayname') : "none";
 		my $company = defined($_->get_value('company')) ? $_->get_value('company') : "none";
 		my $c = defined($_->get_value('c')) ? $_->get_value('c') : "none";
 		my $st = defined($_->get_value('st')) ? $_->get_value('st') : "none";
@@ -79,7 +79,7 @@ while (1) {
 		my $manager = defined($_->get_value('manager')) ? $_->get_value('manager') : "none";
 
 		print "$count found user: $dn , title: $title, dept: $dept, desc: $desc, email: $mail, sam: $sam\n";
-		$query->execute($dn,$title,$dept,$desc,$mail,$sam,$givenName,$sn,$name,$company,$c,$st,$physicalDeliveryOfficeName,$telephoneNumber,$facsimileTelephoneNumber,$manager);
+		$query->execute($dn,$title,$dept,$desc,$mail,$sam,$givenName,$sn,$displayname,$company,$c,$st,$physicalDeliveryOfficeName,$telephoneNumber,$facsimileTelephoneNumber,$manager);
 		#exit if $count > 40; #for debugging so we dont have to go through all the entries
 		$count++
 	}
