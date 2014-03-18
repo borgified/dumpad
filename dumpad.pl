@@ -41,8 +41,7 @@ my $page = Net::LDAP::Control::Paged->new( size => 100 );
 my @args = ( 
 	base     => $config{'base'},
 	scope    => "subtree",
-	#filter   => "(objectClass=user)",
-	filter   => "(samAccountType=805306368)",
+	filter   => "(&(samAccountType=805306368)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))",
 #	callback => \&process_entry, # Call this sub for each entry
 	control  => [ $page ],
 );
