@@ -22,7 +22,7 @@ my $dbh = DBI->connect("DBI:mysql:"
 my $clear_data = $dbh->prepare("truncate table ldap");
 $clear_data->execute;
 
-my $query = $dbh->prepare("insert into ldap (dn,title,department,description,mail,sam,givenName,sn,displayname,company,c,st,physicalDeliveryOfficeName,telephoneNumber,facsimileTelephoneNumber,manager,l) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+my $query = $dbh->prepare("insert into ldap (dn,title,department,description,mail,sam,givenName,sn,displayname,company,c,st,physicalDeliveryOfficeName,telephoneNumber,facsimileTelephoneNumber,manager,l,upn) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 
 
@@ -78,10 +78,11 @@ while (1) {
 		my $facsimileTelephoneNumber = defined($_->get_value('facsimileTelephoneNumber')) ? $_->get_value('facsimileTelephoneNumber') : "none";
 		my $manager = defined($_->get_value('manager')) ? $_->get_value('manager') : "none";
 		my $l = defined($_->get_value('l')) ? $_->get_value('l') : "none";
+		my $upn = defined($_->get_value('userprincipalname')) ? $_->get_value('userprincipalname') : "none";
 
 		print "$count found user: $dn , title: $title, dept: $dept, desc: $desc, email: $mail, sam: $sam\n";
-		$query->execute($dn,$title,$dept,$desc,$mail,$sam,$givenName,$sn,$displayname,$company,$c,$st,$physicalDeliveryOfficeName,$telephoneNumber,$facsimileTelephoneNumber,$manager,$l);
-		#exit if $count > 40; #for debugging so we dont have to go through all the entries
+		$query->execute($dn,$title,$dept,$desc,$mail,$sam,$givenName,$sn,$displayname,$company,$c,$st,$physicalDeliveryOfficeName,$telephoneNumber,$facsimileTelephoneNumber,$manager,$l,$upn);
+#		exit if $count > 40; #for debugging so we dont have to go through all the entries
 		$count++
 	}
 
