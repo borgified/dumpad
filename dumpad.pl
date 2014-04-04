@@ -1,5 +1,9 @@
 #!/usr/bin/env perl
 
+###add_new_column CHANGE HERE
+###if you need to add a new column to the database, follow the markers to modify the script appropriately
+###add_new_column CHANGE HERE
+
 use warnings;
 use strict;
 
@@ -22,7 +26,8 @@ my $dbh = DBI->connect("DBI:mysql:"
 my $clear_data = $dbh->prepare("truncate table ldap");
 $clear_data->execute;
 
-my $query = $dbh->prepare("insert into ldap (dn,title,department,description,mail,sam,givenName,sn,displayname,company,c,st,physicalDeliveryOfficeName,telephoneNumber,facsimileTelephoneNumber,manager,l,upn) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+###add_new_column CHANGE HERE: add the column name, add an extra ?
+my $query = $dbh->prepare("insert into ldap (dn,title,department,description,mail,sam,givenName,sn,displayname,company,c,st,physicalDeliveryOfficeName,telephoneNumber,facsimileTelephoneNumber,manager,l,upn,name) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 
 
@@ -79,9 +84,12 @@ while (1) {
 		my $manager = defined($_->get_value('manager')) ? $_->get_value('manager') : "none";
 		my $l = defined($_->get_value('l')) ? $_->get_value('l') : "none";
 		my $upn = defined($_->get_value('userprincipalname')) ? $_->get_value('userprincipalname') : "none";
+		my $name = defined($_->get_value('name')) ? $_->get_value('name') : "none";
+###add_new_column CHANGE HERE: add a new variable name and set it equal to the value obtained form ad or none if no value is found
 
 		print "$count found user: $dn , title: $title, dept: $dept, desc: $desc, email: $mail, sam: $sam\n";
-		$query->execute($dn,$title,$dept,$desc,$mail,$sam,$givenName,$sn,$displayname,$company,$c,$st,$physicalDeliveryOfficeName,$telephoneNumber,$facsimileTelephoneNumber,$manager,$l,$upn);
+###add_new_column CHANGE HERE: change the query to include the new variable created
+		$query->execute($dn,$title,$dept,$desc,$mail,$sam,$givenName,$sn,$displayname,$company,$c,$st,$physicalDeliveryOfficeName,$telephoneNumber,$facsimileTelephoneNumber,$manager,$l,$upn,$name);
 #		exit if $count > 40; #for debugging so we dont have to go through all the entries
 		$count++
 	}
