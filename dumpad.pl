@@ -29,7 +29,7 @@ my $clear_data = $dbh->prepare("truncate table ldap");
 $clear_data->execute;
 
 ###add_new_column CHANGE HERE: add the column name, add an extra ?
-my $query = $dbh->prepare("insert into ldap (dn,title,department,description,mail,sam,givenName,sn,displayname,company,c,st,physicalDeliveryOfficeName,telephoneNumber,facsimileTelephoneNumber,manager,l,upn,name) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+my $query = $dbh->prepare("insert into ldap (dn,title,department,description,mail,sam,givenName,sn,displayname,company,c,st,physicalDeliveryOfficeName,telephoneNumber,facsimileTelephoneNumber,manager,l,upn,name,eid) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 
 
@@ -88,11 +88,12 @@ while (1) {
 		my $l = defined($_->get_value('l')) ? $_->get_value('l') : "none";
 		my $upn = defined($_->get_value('userprincipalname')) ? $_->get_value('userprincipalname') : "none";
 		my $name = defined($_->get_value('name')) ? $_->get_value('name') : "none";
+		my $eid = defined($_->get_value('employeeID')) ? $_->get_value('employeeID') : "none";
 ###add_new_column CHANGE HERE: add a new variable name and set it equal to the value obtained form ad or none if no value is found
 
-		print "$count found user: $dn , title: $title, dept: $dept, desc: $desc, email: $mail, sam: $sam\n";
+		print "$count found user: $dn , eid: $eid, title: $title, dept: $dept, desc: $desc, email: $mail, sam: $sam\n";
 ###add_new_column CHANGE HERE: change the query to include the new variable created
-		$query->execute($dn,$title,$dept,$desc,$mail,$sam,$givenName,$sn,$displayname,$company,$c,$st,$physicalDeliveryOfficeName,$telephoneNumber,$facsimileTelephoneNumber,$manager,$l,$upn,$name);
+		$query->execute($dn,$title,$dept,$desc,$mail,$sam,$givenName,$sn,$displayname,$company,$c,$st,$physicalDeliveryOfficeName,$telephoneNumber,$facsimileTelephoneNumber,$manager,$l,$upn,$name,$eid);
 #		exit if $count > 40; #for debugging so we dont have to go through all the entries
 		$count++
 	}
