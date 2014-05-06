@@ -19,8 +19,10 @@ my $dbh = DBI->connect("DBI:mysql:"
 	. ";mysql_read_default_file=$my_cnf"
 	.';mysql_read_default_group=ldap',
 	undef,
-	undef
+	undef,
 ) or die "something went wrong ($DBI::errstr)";
+
+$dbh->do(qq{SET NAMES 'utf8';});
 
 
 my $clear_data = $dbh->prepare("truncate table ldap");
@@ -47,6 +49,7 @@ my @args = (
 	base     => $config{'base'},
 	scope    => "subtree",
 	filter   => "(&(samAccountType=805306368)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))",
+#	filter   => "(objectClass=user)",
 #	callback => \&process_entry, # Call this sub for each entry
 	control  => [ $page ],
 );
