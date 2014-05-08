@@ -56,6 +56,9 @@ my @args = (
 
 my $cookie;
 
+#hash to make sure that all the accounts have unique emails and eids.
+my %check_unique_email;
+my %check_unique_eid;
 
 while (1) {
 	# Perform search
@@ -94,6 +97,26 @@ while (1) {
 		print "$count found user: $dn , eid: $eid, title: $title, dept: $dept, desc: $desc, email: $mail, sam: $sam\n";
 ###add_new_column CHANGE HERE: change the query to include the new variable created
 		$query->execute($dn,$title,$dept,$desc,$mail,$sam,$givenName,$sn,$displayname,$company,$c,$st,$physicalDeliveryOfficeName,$telephoneNumber,$facsimileTelephoneNumber,$manager,$l,$upn,$name,$eid);
+
+		if(!exists($check_unique_email{$mail})){
+			$check_unique_email{$mail}=$dn;
+		}elsif($mail eq 'none'){
+			#do nothing
+		}else{
+			print "duplicate email found:\n\t$dn ($mail)\n\t$check_unique_email{$mail} ($mail)\n";
+			print "must fix before we can continue.\n";
+			exit;
+		}
+		if(!exists($check_unique_eid{$eid})){
+			$check_unique_eid{$eid}=$dn;
+		}elsif($eid eq 'none'){
+			#do nothing
+		}else{
+			print "duplicate eid found:\n\t$dn $eid\n\t$check_unique_eid{$eid} $eid\n";
+			print "must fix before we can continue.\n";
+			exit;
+		}
+
 #		exit if $count > 40; #for debugging so we dont have to go through all the entries
 		$count++
 	}
